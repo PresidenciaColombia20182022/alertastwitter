@@ -69,24 +69,6 @@ def scraptweets(search_words, date_since, numTweets, apiauth):
         except:
             continue
 
-    '''
-    try:
-        tweets = tweepy.Cursor(apiauth[0].search_tweets, q=search_words,lang = 'es', tweet_mode='extended').items(numTweets)
-        print('api 0')
-        # Guarda los tweets en una lista de python
-        tweet_list = [tweet for tweet in tweets]
-    except:
-        try:
-            tweets = tweepy.Cursor(apiauth[1].search_tweets, q=search_words,lang = 'es', tweet_mode='extended').items(numTweets)
-            print('api 1')
-            # Guarda los tweets en una lista de python
-            tweet_list = [tweet for tweet in tweets]
-        except:         
-            tweets = tweepy.Cursor(apiauth[2].search_tweets, q=search_words,lang = 'es', tweet_mode='extended').items(numTweets)
-            print('api 2')
-            # Guarda los tweets en una lista de python
-            tweet_list = [tweet for tweet in tweets]
-    '''
 # Obtiene la siguiente info de Twitter:
         # user.screen_name - cuenta de twitter
         # user.description - descripción de la cuenta
@@ -266,12 +248,12 @@ if __name__ == "__main__":
     receiver_id = -618712627
     #Identificar el BOT con su Token correspondiente
     bot = telepot.Bot(TELEGRAM)
-    print('ENVIA MENSAJE')
+   
     #Enviar los mensajes al Telegram
-    #bot.sendMessage(receiver_id,"Las tendencias más importantes al día de hoy son: ")
-    #for i, value in enumerate(data_final['trend']):
-    #    texto = '*'+str(value)+'* -> *'+str(data_final['tweet_volume'][i])+' Menciones*'
-    #    bot.sendMessage(chat_id = receiver_id,
-    #                    text = texto,
-    #                    parse_mode = 'Markdown')
-    #    print(value)
+    bot.sendMessage(receiver_id,"Las tendencias más importantes al día de hoy son: ")
+    for i, value in enumerate(data_final['trend']):
+        texto = '*'+str(value)+'* -> *'+str(data_final['tweet_volume'][i])+' Menciones*'
+        bot.sendMessage(chat_id = receiver_id,
+                        text = texto,
+                        parse_mode = 'Markdown')
+        print(value)

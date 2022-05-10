@@ -132,28 +132,29 @@ def scraptweets(search_words, date_since, numTweets, apiauth):
 def insertdata(data_final):
         try:  
             con = psycopg2.connect(
-                database="postgres",
+                database="TW_tendencias",
                 user="postgres",
-                password="password",
-                host="127.0.0.1",
+                password="Postgres21.",
+                host="192.168.80.60",
                 port="5432")
             cur = con.cursor()
-            postgres_insert_query = """ INSERT INTO TENDENCIAS (TREND, TWEET_VOLUME, DATE) VALUES (%s,%s,%s)"""
+            postgres_insert_query = """ INSERT INTO tendencia (trend, tweetvolume, fecha) VALUES (%s,%s,%s)"""
             #record_to_insert = (list(data_final['trend']), list(data_final['tweet_volume']), list(data_final['date']))
             record_to_insert = data_final
+            #Prueba
             for record in range(len(data_final)):
                 try:
                     cur.execute(postgres_insert_query,tuple(list(data_final.iloc[record])))
                     con.commit()
                     count = cur.rowcount
-                    print(count, "Record {} inserted successfully into TRENDS table".format(record))
+                    print(count, "Record {} inserted successfully into tendencia table".format(record))
                 except (Exception, psycopg2.Error) as error:
-                    print("Record {} NOT inserted into TRENDS table".format(record), error)
+                    print("Record {} NOT inserted into tendencia table".format(record), error)
                 
             
 
         except (Exception, psycopg2.Error) as error:
-            print("Failed to insert record into trend table", error)
+            print("Failed to insert record into tendencia table", error)
         finally:
         # closing database connection.
             if con:
@@ -220,16 +221,16 @@ if __name__ == "__main__":
         pass
     #Conecta con la base de datos PosgresQL
     con = psycopg2.connect(
-        database="postgres",
+        database="TW_tendencias",
         user="postgres",
-        password="password",
-        host="127.0.0.1",
+        password="Postgres21.",
+        host="192.168.80.60",
         port="5432")
     print("Database opened successfully")
 
     cur = con.cursor()
     try:
-        cur.execute('''CREATE TABLE TRENDS
+        cur.execute('''CREATE TABLE TRENDS IF NOT EXISTS
             (TREND CHAR(50),
             TWEET_VOLUME INT NOT NULL,
             DATE DATE);''')
@@ -250,7 +251,8 @@ if __name__ == "__main__":
     bot = telepot.Bot(TELEGRAM)
    
     #Enviar los mensajes al Telegram
-    bot.sendMessage(receiver_id,"Las tendencias más importantes al día de hoy son: ")
+
+    bot.sendMessage(receiver_id,"*Las tendencias más importantes al día de hoy son: *")
     for i, value in enumerate(data_final['trend']):
         texto = '*'+str(value)+'* -> *'+str(data_final['tweet_volume'][i])+' Menciones*'
         bot.sendMessage(chat_id = receiver_id,
